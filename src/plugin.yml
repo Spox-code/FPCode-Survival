@@ -1,0 +1,37 @@
+main: fb.survival.Main
+version: 1.0
+api-version: 1.13
+author: xSpox_
+name: FPCode-Survival
+depend: [FPCode-Essentials]
+
+commands:
+  aitems:
+  eco:
+  kity:
+    aliases:
+      - kits
+      - kit
+      - zestaw
+      - zestawy
+  settings:
+  topka:
+    aliases:
+      - top
+      - stats
+      - statystyki
+  vanish:
+    aliases:
+      - v
+  world:
+  hologram:
+    aliases:
+      - hd
+  setspawn:
+  spawn:
+  npc:
+  withdraw:
+    aliases:
+      - wyplac
+  npcapireload:
+  craftingi:

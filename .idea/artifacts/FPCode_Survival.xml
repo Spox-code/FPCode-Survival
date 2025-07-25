@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="FPCode-Survival">
+    <output-path>$PROJECT_DIR$/../../Serwery/FPCode — kopia/Survival/plugins</output-path>
+    <root id="archive" name="FPCode-Survival.jar">
+      <element id="module-output" name="FPCode-Survival" />
+    </root>
+  </artifact>
+</component>

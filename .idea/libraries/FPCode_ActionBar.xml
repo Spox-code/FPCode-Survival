@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="FPCode-ActionBar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../Gotowe/FPCode-ActionBar.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
