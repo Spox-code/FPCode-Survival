@@ -45,6 +45,7 @@ public class Craft_NetherPass {
         i.setItem(24, NetherPrzepustka.getNetherPass());
 
         i.setItem(40, Craft_item.getitem());
+        i.setItem(41, Craft_Next.getitem());
 
         p.openInventory(i);
     }

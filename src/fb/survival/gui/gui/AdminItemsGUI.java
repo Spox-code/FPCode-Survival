@@ -2,9 +2,7 @@ package fb.survival.gui.gui;
 
 import fb.survival.gui.items.BlueGlass;
 import fb.survival.gui.items.GrayGlass;
-import fb.survival.items.EmblematZycia;
-import fb.survival.items.NetherPrzepustka;
-import fb.survival.items.TotemUlaskawienia;
+import fb.survival.items.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -33,6 +31,8 @@ public class AdminItemsGUI {
         i.setItem(10, TotemUlaskawienia.getitem());
         i.setItem(11, EmblematZycia.getitem());
         i.setItem(12, NetherPrzepustka.getNetherPass());
+        i.setItem(13, Zwoj.getItem());
+        i.setItem(14, Ekskalibur.getitem());
 
         p.openInventory(i);
     }

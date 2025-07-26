@@ -24,7 +24,9 @@ public class PerkiGUI {
         i.setItem(19, BlueGlass.getitem());
         i.setItem(25, BlueGlass.getitem());
 
+        i.setItem(11, Perk_LootingChance.getitem(p));
         i.setItem(13, Perk_Deaths.getitem(p));
+        i.setItem(15, Perk_FastMining.getitem(p));
 
         p.openInventory(i);
     }

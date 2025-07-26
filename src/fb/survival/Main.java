@@ -88,6 +88,8 @@ public class Main extends JavaPlugin {
         new WorldAPI();
         WorldAPI.loadWorlds();
         registerNetherPassRecipe();
+        new DropManager(this);
+        new MarketManager(this);
 
         // --- Zmiany dla NPCAPI ---
         // Inicjalizuj NPCAPI, przekazując instancję głównego pluginu
@@ -112,10 +114,12 @@ public class Main extends JavaPlugin {
         getCommand("withdraw").setExecutor(new Withdraw(ranksApi));
         getCommand("npcapireload").setExecutor(new NPCAPIReloadCMD(ranksApi));
         getCommand("craftingi").setExecutor(new Craftingi());
+        getCommand("zrzut").setExecutor(new Zrzut(ranksApi));
+        getCommand("rynek").setExecutor(new MarketCommand(ranksApi));
 
         // Rejestracja eventów
         getServer().getPluginManager().registerEvents(new PlayerInventory(ranksApi), this);
-        getServer().getPluginManager().registerEvents(new ClickEvent(ranksApi), this);
+        getServer().getPluginManager().registerEvents(new ClickEvent(ranksApi, this), this);
         getServer().getPluginManager().registerEvents(new PlayerDeath(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoin(this, ranksApi), this);
         getServer().getPluginManager().registerEvents(new PlayerMove(), this);
@@ -128,6 +132,8 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerSendCommand(), this);
         getServer().getPluginManager().registerEvents(new PlayerRespawn(), this);
         getServer().getPluginManager().registerEvents(new NetherJoin(), this);
+        getServer().getPluginManager().registerEvents(new MarketListener(this), this);
+        //getServer().getPluginManager().registerEvents(new SingChange(), this);
 
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 

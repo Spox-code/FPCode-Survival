@@ -43,6 +43,8 @@ public class PlayerAPI {
             pd.getData().set(p.getUniqueId().toString() + ".nick", p.getName());
             pd.getData().set(p.getUniqueId().toString() + ".skull", false);
             pd.getData().set(p.getUniqueId().toString() + ".perki.deaths", 0);
+            pd.getData().set(p.getUniqueId().toString() + ".perki.looting_chance", 0);
+            pd.getData().set(p.getUniqueId().toString() + ".perki.fast_mining", 0);
             pd.saveData(); // Zapisujemy zmiany od razu po ustawieniu nicku
         }
     }

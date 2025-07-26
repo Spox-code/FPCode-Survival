@@ -74,7 +74,17 @@ public class SurvivalExpansion extends PlaceholderExpansion {
             // %fpcode-survival_money%
             if (identifier.equalsIgnoreCase("money")) {
                 double money = Main.getMoney(player.getName());
-                return String.format("%.2f", money);
+                return String.format("%.2f", money) + "$";
+            }
+            if (identifier.equalsIgnoreCase("money_name")) {
+                double money = Main.getMoney(player.getName());
+                String formatmoney = String.format("%.2f", money) + "$";
+                if(money > 1000000){
+                    formatmoney = String.format("%.2f", (money/1000000)) + "mln";
+                }else if(money > 1000){
+                    formatmoney = String.format("%.2f", (money/1000)) + "tys";
+                }
+                return formatmoney;
             }
 
             // %fpcode-survival_kills%
