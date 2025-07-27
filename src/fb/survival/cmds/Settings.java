@@ -37,7 +37,7 @@ public class Settings implements CommandExecutor, TabExecutor {
                             for(Player ps : Bukkit.getOnlinePlayers()){
                                 ps.sendMessage("");
                                 ps.sendMessage(HexAPI.hex("   #0096fcFPCode §8-#0096fc Ogloszenie"));
-                                ps.sendMessage(HexAPI.hex("   §fWlasnie zostal wlaczony #0096fcNether"));
+                                ps.sendMessage(HexAPI.hex("   §8» §fWlasnie zostal wlaczony #0096fcNether"));
                                 ps.sendMessage("");
                             }
                         }else if(status.equalsIgnoreCase("off")){
@@ -46,7 +46,7 @@ public class Settings implements CommandExecutor, TabExecutor {
                             for(Player ps : Bukkit.getOnlinePlayers()){
                                 ps.sendMessage("");
                                 ps.sendMessage(HexAPI.hex("   #0096fcFPCode §8-#0096fc Ogloszenie"));
-                                ps.sendMessage(HexAPI.hex("   §fWlasnie zostal wylaczony #0096fcNether"));
+                                ps.sendMessage(HexAPI.hex("   §8» §fWlasnie zostal wylaczony #0096fcNether"));
                                 ps.sendMessage("");
                                 if(ps.getLocation().getWorld().getName().equalsIgnoreCase("world_nether")){
 
@@ -62,7 +62,7 @@ public class Settings implements CommandExecutor, TabExecutor {
                             for(Player ps : Bukkit.getOnlinePlayers()){
                                 ps.sendMessage("");
                                 ps.sendMessage(HexAPI.hex("   #0096fcFPCode §8-#0096fc Ogloszenie"));
-                                ps.sendMessage(HexAPI.hex("   §fWlasnie zostaly wlaczone #0096fcKity"));
+                                ps.sendMessage(HexAPI.hex("   §8» §fWlasnie zostaly wlaczone #0096fcKity"));
                                 ps.sendMessage("");
                             }
                         }else if(status.equalsIgnoreCase("off")){
@@ -71,7 +71,7 @@ public class Settings implements CommandExecutor, TabExecutor {
                             for(Player ps : Bukkit.getOnlinePlayers()){
                                 ps.sendMessage("");
                                 ps.sendMessage(HexAPI.hex("   #0096fcFPCode §8-#0096fc Ogloszenie"));
-                                ps.sendMessage(HexAPI.hex("   §fWlasnie zostaly wylaczone #0096fcKity"));
+                                ps.sendMessage(HexAPI.hex("   §8» §fWlasnie zostaly wylaczone #0096fcKity"));
                                 ps.sendMessage("");
                             }
                         }else{

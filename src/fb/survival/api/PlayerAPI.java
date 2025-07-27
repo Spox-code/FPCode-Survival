@@ -3,7 +3,10 @@ package fb.survival.api;
 import fb.core.Main; // Dodaj import dla Main, aby przekazać go do PlayerData
 import fb.core.api.HexAPI;
 import fb.survival.data.PlayerData;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -34,7 +37,7 @@ public class PlayerAPI {
 
     // Konstruktor powinien przyjmować instancję Main, aby PlayerData mogło być poprawnie zainicjowane
     public PlayerAPI() {
-        this.pd = PlayerData.getInstance(); // Poprawne inicjalizowanie PlayerData z instancją pluginu
+        PlayerAPI.pd = PlayerData.getInstance(); // Poprawne inicjalizowanie PlayerData z instancją pluginu
     }
 
     public static void setup(Player p){
@@ -60,6 +63,31 @@ public class PlayerAPI {
     }
     public static void setSkull(Player p, boolean status){
         pd.getData().set(p.getUniqueId() + ".skull", status);
+        pd.saveData();
+    }
+    public static boolean hasHome(Player p, int number){
+        return pd.getData().getString(p.getUniqueId() + ".home.num" + number) != null;
+    }
+    public static void setHome(Player p, int number, Location loc){
+        pd.getData().set(p.getUniqueId() + ".home.num" + number + ".world", loc.getWorld().getName());
+        pd.getData().set(p.getUniqueId() + ".home.num" + number + ".x", loc.getX());
+        pd.getData().set(p.getUniqueId() + ".home.num" + number + ".y", loc.getY());
+        pd.getData().set(p.getUniqueId() + ".home.num" + number + ".z", loc.getZ());
+        pd.getData().set(p.getUniqueId() + ".home.num" + number + ".yaw", loc.getYaw());
+        pd.getData().set(p.getUniqueId() + ".home.num" + number + ".pitch", loc.getPitch());
+        pd.saveData();
+    }
+    public static Location getHome(Player p, int number){
+        World world = Bukkit.getWorld(pd.getData().getString(p.getUniqueId() + ".home.num" + number + ".world"));
+        double x = pd.getData().getDouble(p.getUniqueId() + ".home.num" + number + ".x");
+        double y = pd.getData().getDouble(p.getUniqueId() + ".home.num" + number + ".y");
+        double z = pd.getData().getDouble(p.getUniqueId() + ".home.num" + number + ".z");
+        double yaw = pd.getData().getDouble(p.getUniqueId() + ".home.num" + number + ".yaw");
+        double pitch = pd.getData().getDouble(p.getUniqueId() + ".home.num" + number + ".pitch");
+        return new Location(world, x, y, z, (float) yaw, (float) pitch);
+    }
+    public static void removeHome(Player p, int number){
+        pd.getData().set(p.getUniqueId() + ".home.num" + number, null);
         pd.saveData();
     }
 

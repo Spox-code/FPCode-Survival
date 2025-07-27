@@ -1,5 +1,6 @@
 package fb.survival.events;
 
+import fb.survival.cmds.Sprawdzanie;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,6 +16,12 @@ public class PlayerSendCommand implements Listener {
             if(msg.startsWith("/")){
                 e.setCancelled(true);
                 p.sendMessage("§cNie mozesz wpisywac komend podczas walki!");
+            }
+        }
+        if(Sprawdzanie.playerisCheck.get(p)){
+            if(msg.startsWith("/")){
+                e.setCancelled(true);
+                p.sendMessage("§cNie mozesz wykonywac komend podczas sprawdzania");
             }
         }
     }

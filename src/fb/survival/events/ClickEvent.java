@@ -10,10 +10,7 @@ import fb.survival.items.BankNote;
 import fb.survival.items.EmblematZycia;
 import fb.survival.items.TotemUlaskawienia;
 import fb.survival.items.Zwoj;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -105,7 +102,10 @@ public class ClickEvent implements Listener {
                 }.runTaskTimer(plugin, 0L, 2L);
 
                 e.setCancelled(true);
-                p.sendMessage(HexAPI.hex("§8[#0096FC⚡§8] §aSkrzynka ze zrzutu zostala otwarta! Teren bedzie przywracany."));
+                p.sendMessage(HexAPI.hex("§8[#0096FC⚡§8] §fSkrzynka ze zrzutu zostala otwarta! Teren bedzie przywracany."));
+                for(Player ps : Bukkit.getOnlinePlayers()){
+                    ps.sendMessage(HexAPI.hex("§8[#0096FC⚡§8] §fZrzut zostal znaleziony przez #0096fc" + p.getName()));
+                }
                 return;
             }
 
@@ -136,6 +136,7 @@ public class ClickEvent implements Listener {
                     p.getInventory().setItemInMainHand(null);
                 }
                 p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20, 254));
+                p.getWorld().spawnParticle(Particle.HEART, p.getLocation().add(0, 1, 0), 50, 0.5, 0.5, 0.5);
                 p.sendTitle(HexAPI.hex("#0096fc§l❤ §b§lEmblemat Życia #0096fc§l❤"), HexAPI.hex("§fTwoje zycie zostalo #0096fculeczone"));
             }else if(mainitem.hasItemMeta() && mainitem.getItemMeta().hasCustomModelData() && mainitem.getItemMeta().getCustomModelData() == BankNote.iditem){
                 String lore = mainitem.getItemMeta().getLore().get(1).replace(HexAPI.hex("§7Banknot o wartości: §b§l"), "").replace("$", "");

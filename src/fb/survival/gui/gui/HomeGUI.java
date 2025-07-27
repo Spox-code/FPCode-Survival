@@ -1,21 +1,23 @@
 package fb.survival.gui.gui;
 
-import fb.survival.api.ServerAPI;
-import fb.survival.gui.items.BlueGlass;
-import fb.survival.gui.items.GrayGlass;
-import fb.survival.gui.items.TOP_Deaths;
-import fb.survival.gui.items.TOP_Kills;
-import fb.survival.items.NetherPrzepustka;
+import fb.survival.gui.items.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class CraftingiGUI {
+import java.util.HashMap;
+import java.util.Map;
+
+public class HomeGUI {
+
+    public static Map<Player, Boolean> isteleport = new HashMap<>();
+    public static Map<Player, Integer> teleporttime = new HashMap<>();
+    public static Map<Player, Integer> teleporthome = new HashMap<>();
 
     public static void OpenGUI(Player p){
-        Inventory i = Bukkit.createInventory(null, 27, "§8§lCraftingi");
+        Inventory i = Bukkit.createInventory(null, 27, "§8§lDomy");
 
         for(int x = 0; x<27;x++){
             i.setItem(x, GrayGlass.getitem());
@@ -28,8 +30,9 @@ public class CraftingiGUI {
         i.setItem(19, BlueGlass.getitem());
         i.setItem(25, BlueGlass.getitem());
 
-        i.setItem(10, NetherPrzepustka.getNetherPass());
-        i.setItem(11, new ItemStack(Material.NETHER_STAR));
+        i.setItem(11, HomeItem.getitem(p, 1));
+        i.setItem(13, HomeItem.getitem(p, 2));
+        i.setItem(15, HomeItem.getitem(p, 3));
 
         p.openInventory(i);
     }

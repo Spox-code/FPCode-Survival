@@ -4,6 +4,7 @@ import fb.core.api.HexAPI;
 import fb.survival.Systems;
 import fb.survival.api.ServerAPI;
 import fb.survival.cmds.Spawn;
+import fb.survival.gui.gui.HomeGUI;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
@@ -25,6 +26,11 @@ public class PlayerMove implements Listener {
         if(Spawn.teleportstatus.get(p)){
             Spawn.teleportstatus.put(p, false);
             Spawn.teleport.put(p, 5);
+            p.sendTitle(HexAPI.hex("#0096fc§lTELEPORT"), HexAPI.hex("§fTeleportacja #0096fcanulowana"));
+        }
+        if(HomeGUI.isteleport.get(p)){
+            HomeGUI.isteleport.put(p, false);
+            HomeGUI.teleporttime.put(p, 5);
             p.sendTitle(HexAPI.hex("#0096fc§lTELEPORT"), HexAPI.hex("§fTeleportacja #0096fcanulowana"));
         }
     }

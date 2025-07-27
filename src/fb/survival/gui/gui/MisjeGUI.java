@@ -1,35 +1,33 @@
 package fb.survival.gui.gui;
 
-import fb.survival.api.ServerAPI;
 import fb.survival.gui.items.BlueGlass;
 import fb.survival.gui.items.GrayGlass;
-import fb.survival.gui.items.TOP_Deaths;
-import fb.survival.gui.items.TOP_Kills;
-import fb.survival.items.NetherPrzepustka;
+import fb.survival.items.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class CraftingiGUI {
+public class MisjeGUI {
 
     public static void OpenGUI(Player p){
-        Inventory i = Bukkit.createInventory(null, 27, "§8§lCraftingi");
+        Inventory i = Bukkit.createInventory(null, 45, "§8§lMisje");
 
-        for(int x = 0; x<27;x++){
+        for(int x = 0; x<45;x++){
             i.setItem(x, GrayGlass.getitem());
         }
         setItem(new ItemStack(Material.AIR), i, 10, 7);
+        setItem(new ItemStack(Material.AIR), i, 19, 7);
+        setItem(new ItemStack(Material.AIR), i, 28, 7);
         i.setItem(1, BlueGlass.getitem());
         i.setItem(7, BlueGlass.getitem());
         i.setItem(9, BlueGlass.getitem());
         i.setItem(17, BlueGlass.getitem());
-        i.setItem(19, BlueGlass.getitem());
-        i.setItem(25, BlueGlass.getitem());
-
-        i.setItem(10, NetherPrzepustka.getNetherPass());
-        i.setItem(11, new ItemStack(Material.NETHER_STAR));
+        i.setItem(27, BlueGlass.getitem());
+        i.setItem(35, BlueGlass.getitem());
+        i.setItem(37, BlueGlass.getitem());
+        i.setItem(43, BlueGlass.getitem());
 
         p.openInventory(i);
     }

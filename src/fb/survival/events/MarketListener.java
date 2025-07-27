@@ -2,7 +2,7 @@ package fb.survival.events;
 
 import fb.core.api.BanAPI;
 import fb.core.api.HexAPI;
-import fb.survival.api.MarketManager;
+import fb.survival.api.MarketManager; // Pozostawiamy fb.survival.api, bo tam jest MarketManager
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,6 +17,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class MarketListener implements Listener {
@@ -55,17 +56,29 @@ public class MarketListener implements Listener {
         String displayName = meta.hasDisplayName() ? meta.getDisplayName() : "";
         int currentPage = MarketManager.getPlayerMarketPage().getOrDefault(player.getUniqueId(), 0);
 
-        if (displayName.equals(HexAPI.hex("&aPoprzednia Strona"))) {
+        // Zmieniono na §b, aby pasowało do MarketManager
+        if (displayName.equals(HexAPI.hex("§bPoprzednia Strona"))) {
             if (currentPage > 0) {
                 MarketManager.openMarketGUI(player, currentPage - 1);
             } else {
-                player.sendMessage(HexAPI.hex("&cNie ma poprzedniej strony!"));
+                player.sendMessage(HexAPI.hex("§8[#0096FC⚡§8] §cNie ma poprzedniej strony!"));
             }
             return;
         }
 
-        if (displayName.equals(HexAPI.hex("&aNastępna Strona"))) {
-            MarketManager.openMarketGUI(player, currentPage + 1);
+        // Zmieniono na §b, aby pasowało do MarketManager
+        if (displayName.equals(HexAPI.hex("§bNastępna Strona"))) {
+            // Sprawdź, czy istnieje następna strona zanim ją otworzysz
+            List<MarketManager.MarketItem> allListings = new ArrayList<>();
+            MarketManager.getAllListings().values().forEach(allListings::addAll);
+            int totalListings = allListings.size();
+            int maxPages = (int) Math.ceil((double) totalListings / MarketManager.ITEMS_PER_PAGE) - 1; // Maksymalny indeks strony (licząc od 0)
+
+            if (currentPage < maxPages) {
+                MarketManager.openMarketGUI(player, currentPage + 1);
+            } else {
+                player.sendMessage(HexAPI.hex("§8[#0096FC⚡§8] §cNie ma następnej strony!"));
+            }
             return;
         }
 
@@ -87,81 +100,41 @@ public class MarketListener implements Listener {
             UUID listingUUID = UUID.fromString(meta.getPersistentDataContainer().get(listingIdKey, PersistentDataType.STRING));
 
             if (player.getUniqueId().equals(sellerUUID)) {
-                player.sendMessage(HexAPI.hex("&cNie możesz kupić własnego przedmiotu!"));
+                player.sendMessage(HexAPI.hex("§8[#0096FC⚡§8] §cNie możesz kupić własnego przedmiotu!"));
                 return;
             }
 
             // --- Logika zakupu przedmiotu ---
             MarketManager.MarketItem purchasedItem = MarketManager.removeListing(listingUUID);
             if (purchasedItem != null) {
-                int playerMoney = BanAPI.getPlayerStatMoney(player.getName()); // Użyj lepszej nazwy zmiennej
+                int playerMoney = BanAPI.getPlayerStatMoney(player.getName());
 
-                // Sprawdź, czy gracz ma miejsce w ekwipunku
-                // Poprawione sprawdzanie miejsca: .firstEmpty() != -1 oznacza, że jest wolny slot
-                // lub .containsAtLeast() nie jest odpowiednie do sprawdzania miejsca, tylko czy już ma przedmiot.
-                // Uprośćmy to do sprawdzenia pierwszego pustego slotu.
-                if (player.getInventory().firstEmpty() != -1) {
-                    // Dodatkowo sprawdź, czy przedmiot zmieści się w istniejących stackach
-                    // To jest bardziej złożone i na razie pominięte dla prostoty.
-                    // Jeśli chcesz bardziej zaawansowaną logikę: player.getInventory().canAddItem(purchasedItem.getItemStack())
-
+                if (player.getInventory().firstEmpty() != -1 || player.getInventory().contains(purchasedItem.getItemStack().getType())) {
                     if (playerMoney >= price) {
-                        // Tutaj poprawiamy konwersję double na int
-                        // Zalecane: zaokrąglanie do najbliższej liczby całkowitej
                         int priceInt = (int) Math.round(price);
 
                         BanAPI.takeMoney(player.getName(), priceInt);
                         BanAPI.addMoney(Bukkit.getOfflinePlayer(sellerUUID).getName(), priceInt);
 
                         player.getInventory().addItem(purchasedItem.getItemStack());
-                        player.sendMessage(HexAPI.hex("&fPomyślnie kupiłeś &b" + purchasedItem.getItemStack().getAmount() + "x " + purchasedItem.getItemStack().getType().name() + " &fza &e" + String.format("%.2f", price) + "&a$. "));
+                        player.sendMessage(HexAPI.hex("§8[#0096FC⚡§8] §fPomyślnie kupiłeś &b" + purchasedItem.getItemStack().getAmount() + "x " + purchasedItem.getItemStack().getType().name() + " &fza #0096fc" + String.format("%.2f", price) + "&a$. "));
 
-                        // Wiadomość dla sprzedawcy
                         if (Bukkit.getOfflinePlayer(sellerUUID).isOnline()) {
-                            Bukkit.getOfflinePlayer(sellerUUID).getPlayer().sendMessage(HexAPI.hex("&aTwój przedmiot &e" + purchasedItem.getItemStack().getAmount() + "x " + purchasedItem.getItemStack().getType().name() + " &azostał kupiony przez &b" + player.getName() + " &aza &e" + String.format("%.2f", price) + "&a$."));
+                            Bukkit.getOfflinePlayer(sellerUUID).getPlayer().sendMessage(HexAPI.hex("§8[#0096FC⚡§8] §aTwój przedmiot &e" + purchasedItem.getItemStack().getAmount() + "x " + purchasedItem.getItemStack().getType().name() + " &azostał kupiony przez &b" + player.getName() + " &aza #0096fc" + String.format("%.2f", price) + "&a$."));
                         }
                         MarketManager.openMarketGUI(player, currentPage); // Odśwież GUI po zakupie
                     } else {
-                        player.sendMessage(HexAPI.hex("&cNie masz wystarczająco pieniędzy! Potrzeba: &e" + String.format("%.2f", price) + "&c$."));
-                        // Jeśli nie ma pieniędzy, przywróć przedmiot na rynek
-                        MarketManager.addListing(Bukkit.getOfflinePlayer(purchasedItem.getSellerUUID()).getPlayer(), purchasedItem.getItemStack(), purchasedItem.getPrice());
-                        // Zwróć uwagę, że MarketManager.addListing oczekuje Player, ale tutaj mamy OfflinePlayer
-                        // To wymaga przemyślenia, jak obsłużyć zwracanie przedmiotu na rynek, jeśli sprzedawca jest offline.
-                        // Rozwiązanie tymczasowe: bezpośrednie dodanie do mapy `marketListings` (jeśli MarketManager to umożliwia)
-                        // Lub: MarketManager.restoreListing(purchasedItem); -> musiałbyś dodać taką metodę w MarketManager
-
-                        // Najprostsze rozwiązanie, jeśli addListing usuwa z ekwipunku i dodaje do mapy
-                        // To jest problematyczne, bo już usunęliśmy z mapy w removeListing.
-                        // Musimy stworzyć metodę w MarketManager do "anulowania" usunięcia, jeśli coś poszło nie tak.
-
-                        // Na razie przywracamy przedmiot na listę bezpośrednio
-                        // To jest ten problem, który mieliśmy wcześniej.
-                        // Musimy mieć metodę w MarketManager, która bezpiecznie "cofnie" usunięcie.
-                        // Tymczasowo:
-                        // MarketManager.marketListings.computeIfAbsent(purchasedItem.getSellerUUID(), k -> new ArrayList<>()).add(purchasedItem);
-                        // Ta linia jest nadal problematyczna, bo marketListings jest prywatne.
-                        // Rozwiązanie poniżej: dodaj metodę do MarketManager `restoreListing(MarketItem item)`
-
-                        // Dopóki nie masz metody `restoreListing` w MarketManager, musisz to obejść:
-                        // Najbezpieczniej jest, aby `removeListing` zwracało `MarketItem`
-                        // i tutaj, jeśli transakcja się nie powiedzie, to samemu dodasz `purchasedItem` z powrotem do mapy `marketListings`
-                        // Ale skoro `marketListings` jest prywatne, potrzebujesz publicznej metody w `MarketManager` do tego.
-                        // Spójrz na sekcję "Ważna poprawka: przywracanie ofert" poniżej.
+                        player.sendMessage(HexAPI.hex("§8[#0096FC⚡§8] §cNie masz wystarczająco pieniędzy! Potrzeba: #0096fc" + String.format("%.2f", price) + "&c$."));
+                        MarketManager.addListingWithoutRemovingFromPlayer(purchasedItem); // Przywróć na listę
                         MarketManager.openMarketGUI(player, currentPage); // Odśwież GUI
                     }
                 } else {
-                    player.sendMessage(HexAPI.hex("&cNie masz miejsca w ekwipunku!"));
-                    // Jeśli gracz nie ma miejsca, przywróć przedmiot na rynek
-                    // Odkomentuj to, gdy zaimplementujesz MarketManager.restoreListing(purchasedItem)
-                    // MarketManager.restoreListing(purchasedItem); // Użyj nowej metody
-
-                    // Bezpośrednie dodanie do mapy marketListings jest problematyczne ze względu na prywatność
-                    // Zamiast tego, w MarketManager dodamy metodę `addListing(MarketItem item)`
-                    MarketManager.addListingWithoutRemovingFromPlayer(purchasedItem); // Nowa metoda w MarketManager
+                    player.sendMessage(HexAPI.hex("§8[#0096FC⚡§8] §cNie masz miejsca w ekwipunku!"));
+                    MarketManager.addListingWithoutRemovingFromPlayer(purchasedItem); // Przywróć na listę
                     MarketManager.openMarketGUI(player, currentPage); // Odśwież GUI
                 }
             } else {
-                player.sendMessage(HexAPI.hex("&cTen przedmiot nie jest już dostępny."));
+                player.sendMessage(HexAPI.hex("§8[#0096FC⚡§8] §cTen przedmiot nie jest już dostępny."));
                 MarketManager.openMarketGUI(player, currentPage); // Odśwież GUI
             }
         }
@@ -172,7 +145,7 @@ public class MarketListener implements Listener {
         if (!(event.getPlayer() instanceof Player)) return;
 
         Player player = (Player) event.getPlayer();
-        if (event.getView().getTitle() != null && event.getView().getTitle().startsWith(HexAPI.hex("&6&lRynek Przedmiotów"))) {
+        if (event.getView().getTitle() != null && event.getView().getTitle().startsWith(HexAPI.hex("#0096fc&lRynek Przedmiotów"))) {
             MarketManager.getPlayerMarketPage().remove(player.getUniqueId());
         }
     }

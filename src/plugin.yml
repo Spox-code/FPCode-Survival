@@ -37,3 +37,9 @@ commands:
   craftingi:
   zrzut:
   rynek:
+  sprawdzanie:
+    aliases:
+      - spr
+  misje:
+  home:
+  boss:

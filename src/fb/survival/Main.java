@@ -7,12 +7,15 @@ import fb.survival.cmds.*;
 import fb.survival.data.PlayerData; // Nadal zakłada, że PlayerData jest potrzebne
 import fb.survival.data.ServerData; // Nadal zakłada, że ServerData jest potrzebne do innych rzeczy
 import fb.survival.events.*;
+import fb.survival.gui.items.HomeItem;
 import fb.survival.items.NetherPrzepustka;
+import fb.survival.items.Zwoj;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -88,8 +91,11 @@ public class Main extends JavaPlugin {
         new WorldAPI();
         WorldAPI.loadWorlds();
         registerNetherPassRecipe();
+        registerNetherStarRecipe();
         new DropManager(this);
         new MarketManager(this);
+        new HomeItem(ranksApi);
+        new BossAPI();
 
         // --- Zmiany dla NPCAPI ---
         // Inicjalizuj NPCAPI, przekazując instancję głównego pluginu
@@ -116,6 +122,10 @@ public class Main extends JavaPlugin {
         getCommand("craftingi").setExecutor(new Craftingi());
         getCommand("zrzut").setExecutor(new Zrzut(ranksApi));
         getCommand("rynek").setExecutor(new MarketCommand(ranksApi));
+        getCommand("sprawdzanie").setExecutor(new Sprawdzanie(ranksApi));
+        getCommand("misje").setExecutor(new MisjeCMD());
+        getCommand("home").setExecutor(new HomeCommand());
+        getCommand("boss").setExecutor(new Boss(ranksApi));
 
         // Rejestracja eventów
         getServer().getPluginManager().registerEvents(new PlayerInventory(ranksApi), this);
@@ -133,9 +143,29 @@ public class Main extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerRespawn(), this);
         getServer().getPluginManager().registerEvents(new NetherJoin(), this);
         getServer().getPluginManager().registerEvents(new MarketListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerChat(ranksApi), this);
+        getServer().getPluginManager().registerEvents(new ChangeFood(), this);
+        getServer().getPluginManager().registerEvents(new BossDeath(), this);
         //getServer().getPluginManager().registerEvents(new SingChange(), this);
 
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+
+        /*
+            TODO
+            Sklep
+            Misje
+            Kowal
+            Eventy
+            Skrzynki
+            Bossy (Dodanie paru bosow dodanie opcje bossy do /settings i dodac automatyczne ich respienie co 6h)
+            Custom Enchanty
+            /discord
+            Auto MSG
+            /pay <gracz> <kwota>
+            Nadanie uprawien
+            /Rangi
+            /Pomoc
+         */
 
         // Zarejestruj rozszerzenie PlaceholderAPI
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
@@ -189,6 +219,26 @@ public class Main extends JavaPlugin {
 
         // 6. Zarejestruj recepturę w Bukkit
         Bukkit.addRecipe(recipe);
-        getLogger().info("Zarejestrowano recepturę dla Przepustki Netheru.");
+    }
+    private void registerNetherStarRecipe() {
+        NamespacedKey key = new NamespacedKey(this, "nether_star_custom"); // Zmień klucz, aby uniknąć konfliktów
+
+        ItemStack result = NetherPrzepustka.getNetherPass();
+
+        ShapedRecipe recipe = new ShapedRecipe(key, result);
+
+        recipe.shape("ZZZ", "ZDZ", "ZZZ");
+
+        ItemStack zwoj = Zwoj.getItem();
+        recipe.setIngredient('Z', new RecipeChoice.ExactChoice(zwoj));
+
+        // Jeśli 'G' i 'S' mają pozostać jako zwykłe materiały, to zostawiasz je bez zmian:
+        recipe.setIngredient('D', Material.DIAMOND_BLOCK);
+
+        // ***** ZMIANY KOŃCZĄ SIĘ TUTAJ *****
+
+        // 3. Zarejestruj recepturę w Bukkit
+        Bukkit.addRecipe(recipe);
+        getLogger().info("Custom Nether Star recipe registered successfully!");
     }
 }

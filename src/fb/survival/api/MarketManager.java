@@ -1,4 +1,4 @@
-package fb.survival.api; // Zmieniono pakiet z fb.survival.api na fb.survival.market
+package fb.survival.api;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -33,7 +33,7 @@ public class MarketManager {
     private static Map<UUID, Integer> playerMarketPage = new HashMap<>();
 
     private static final int GUI_SIZE = 54;
-    private static final int ITEMS_PER_PAGE = 45;
+    public static final int ITEMS_PER_PAGE = 45; // Zmieniono na public, aby było dostępne z MarketListener
 
     private static NamespacedKey marketPriceKey;
     private static NamespacedKey marketSellerKey;
@@ -103,11 +103,11 @@ public class MarketManager {
             List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
             lore.add(" ");
             // Ulepszona kolorystyka dla ceny i sprzedawcy w lore
-            lore.add(HexAPI.hex("§fCena: #0096fc" + String.format("%.2f", price) + "$")); // Kolor niebieski dla ceny
+            lore.add(HexAPI.hex(" §8» §fCena: #0096fc" + String.format("%.2f", price) + "$")); // Kolor niebieski dla ceny
             String sellerName = Bukkit.getOfflinePlayer(sellerUUID).getName();
-            lore.add(HexAPI.hex("§fSprzedawca: §b" + (sellerName != null ? sellerName : "Nieznany"))); // Jasnoniebieski dla nazwy sprzedawcy
+            lore.add(HexAPI.hex(" §8» §fSprzedawca: §b" + (sellerName != null ? sellerName : "Nieznany"))); // Jasnoniebieski dla nazwy sprzedawcy
             lore.add(" ");
-            lore.add(HexAPI.hex("§ePPM, aby kupić!")); // Żółty dla instrukcji
+            lore.add(HexAPI.hex("§8[ §bKliknij PPM, aby kupic przedmiot §8]"));
             meta.setLore(lore);
 
             meta.getPersistentDataContainer().set(marketPriceKey, PersistentDataType.DOUBLE, price);
@@ -127,14 +127,14 @@ public class MarketManager {
      */
     public static void addListing(Player player, ItemStack item, double price) {
         if (!player.getInventory().containsAtLeast(item, item.getAmount())) {
-            player.sendMessage(HexAPI.hex("§cNie masz wystarczającej ilości tego przedmiotu!")); // Czerwony
+            player.sendMessage(HexAPI.hex("§8[#0096FC⚡§8] §cNie masz wystarczającej ilości tego przedmiotu!"));
             return;
         }
         player.getInventory().removeItem(item);
 
         MarketItem marketItem = new MarketItem(player.getUniqueId(), item, price);
         marketListings.computeIfAbsent(player.getUniqueId(), k -> new ArrayList<>()).add(marketItem);
-        player.sendMessage(HexAPI.hex("§8[#0096FC⚡§8] §fPomyślnie wystawiłeś §b" + item.getAmount() + "x " + item.getType().name() + " §fna rynku za #0096fc" + String.format("%.2f", price) + "$.")); // Zielony, niebieski, żółty
+        player.sendMessage(HexAPI.hex("§8[#0096FC⚡§8] §fPomyślnie wystawiłeś §b" + item.getAmount() + "x " + item.getType().name() + " §fna rynku za #0096fc" + String.format("%.2f", price) + "$."));
         plugin.getLogger().info(player.getName() + " listed " + item.getAmount() + "x " + item.getType().name() + " for " + price + "$");
         saveListingsToFile();
     }
@@ -189,32 +189,45 @@ public class MarketManager {
      * @param page Numer strony do wyświetlenia (zaczynając od 0).
      */
     public static void openMarketGUI(Player player, int page) {
-        // Tytuł GUI z kolorem #0096fc
-        Inventory gui = Bukkit.createInventory(null, GUI_SIZE, HexAPI.hex("#0096fc&lRynek Przedmiotów §7(Strona " + (page + 1) + ")"));
-
         List<MarketItem> allListings = new ArrayList<>();
         marketListings.values().forEach(allListings::addAll);
         Collections.sort(allListings, (item1, item2) -> Double.compare(item1.getPrice(), item2.getPrice()));
 
+        // Oblicz maksymalną liczbę stron
+        int totalListings = allListings.size();
+        int maxPages = (int) Math.ceil((double) totalListings / ITEMS_PER_PAGE) - 1; // max indeks strony
+
+        // Upewnij się, że strona jest w prawidłowym zakresie
+        if (page < 0) {
+            page = 0;
+        } else if (page > maxPages && totalListings > 0) { // Jeśli jest pusto, maxPages będzie -1, więc nie przechodź na stronę 0
+            page = maxPages;
+            player.sendMessage(HexAPI.hex("§8[#0096FC⚡§8] §cNie ma już więcej przedmiotów na tej stronie! Cofam do ostatniej."));
+        } else if (totalListings == 0 && page > 0) { // Jeśli rynek jest pusty i próbujemy iść na stronę > 0
+            page = 0;
+            player.sendMessage(HexAPI.hex("§8[#0096FC⚡§8] §cRynek jest obecnie pusty!"));
+        }
+
+
+        Inventory gui = Bukkit.createInventory(null, GUI_SIZE, HexAPI.hex("#0096fc&lRynek Przedmiotów §7(Strona " + (page + 1) + ")"));
+
         int startIndex = page * ITEMS_PER_PAGE;
         int endIndex = Math.min(startIndex + ITEMS_PER_PAGE, allListings.size());
 
-        if (startIndex > 0 && startIndex >= allListings.size()) {
-            player.sendMessage(HexAPI.hex("§cCóż, nie ma już więcej przedmiotów na tej stronie!")); // Czerwony
-            openMarketGUI(player, page - 1);
-            return;
+        List<MarketItem> listingsOnPage = new ArrayList<>();
+        if (startIndex < allListings.size()) { // Upewnij się, że startIndex jest w granicach
+            listingsOnPage = allListings.subList(startIndex, endIndex);
         }
-
-        List<MarketItem> listingsOnPage = allListings.subList(startIndex, endIndex);
 
         for (int i = 0; i < listingsOnPage.size(); i++) {
             gui.setItem(i, listingsOnPage.get(i).getDisplayItem());
         }
 
         // Przyciski nawigacyjne z ulepszoną kolorystyką
-        ItemStack prevPageButton = createGuiItem(Material.ARROW, "§bPoprzednia Strona", "§7Kliknij, aby przejść do poprzedniej strony."); // Jasnoniebieski
-        ItemStack nextPageButton = createGuiItem(Material.ARROW, "§bNastępna Strona", "§7Kliknij, aby przejść do następnej strony."); // Jasnoniebieski
-        ItemStack closeButton = createGuiItem(Material.BARRIER, "§cZamknij", "§7Kliknij, aby zamknąć rynek."); // Czerwony
+        // Upewnij się, że displayName w listenerze pasuje do tego.
+        ItemStack prevPageButton = createGuiItem(Material.ARROW, "§bPoprzednia Strona", "§7Kliknij, aby przejść do poprzedniej strony.");
+        ItemStack nextPageButton = createGuiItem(Material.ARROW, "§bNastępna Strona", "§7Kliknij, aby przejść do następnej strony.");
+        ItemStack closeButton = createGuiItem(Material.BARRIER, "§cZamknij", "§7Kliknij, aby zamknąć rynek.");
 
         gui.setItem(GUI_SIZE - 9, prevPageButton);
         gui.setItem(GUI_SIZE - 5, closeButton);
@@ -331,5 +344,10 @@ public class MarketManager {
 
     public static Map<UUID, Integer> getPlayerMarketPage() {
         return playerMarketPage;
+    }
+
+    // Nowa metoda do pobierania wszystkich listingów (potrzebna w listenerze)
+    public static Map<UUID, List<MarketItem>> getAllListings() {
+        return marketListings;
     }
 }

@@ -24,6 +24,7 @@ public class Zrzut implements CommandExecutor {
     // oraz mapę bloków, które zostały zniszczone wokół tej skrzynki.
     // Wewnętrzna mapa: Location bloku -> Material bloku przed zniszczeniem.
     public static Map<Location, Map<Location, Material>> zrzutChestsWithDestroyedBlocks = new HashMap<>();
+    public static Map<Location, Material> blocksToRestore = new HashMap<>();
 
     public Zrzut(RanksAPI ra){
         Zrzut.ra = ra;
@@ -35,11 +36,6 @@ public class Zrzut implements CommandExecutor {
             if(ra.hasPermission(p, "fb.zrzut")){
                 Location playerLoc = p.getLocation();
 
-                // --- Zapisywanie bloków przed eksplozją ---
-                Map<Location, Material> blocksToRestore = new HashMap<>();
-
-                // Promień skanowania dla bloków (powinien być taki sam jak siła eksplozji lub nieco większy).
-                // Domyślna siła 4.0f oznacza promień około 4 bloków.
                 int radius = 4;
 
                 for (int x = -radius; x <= radius; x++) {
@@ -55,13 +51,6 @@ public class Zrzut implements CommandExecutor {
                         }
                     }
                 }
-                // --- Koniec zapisywania bloków przed eksplozją ---
-
-                // Tworzymy eksplozję:
-                // 1. playerLoc: lokalizacja gracza
-                // 2. 4.0f: siła eksplozji
-                // 3. true: BĘDZIE niszczyć bloki
-                // 4. true: BĘDZIE generować ogień
                 p.getWorld().createExplosion(playerLoc, 4.0f, true, true);
 
                 // Znajdujemy blok pod graczem, upewniając się, że jest to stabilne podłoże po eksplozji.

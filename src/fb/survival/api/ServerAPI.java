@@ -40,6 +40,19 @@ public class ServerAPI {
         World world = Bukkit.getWorld(sd.getData().getString("spawn.world"));
         return new Location(world, sd.getData().getDouble("spawn.x"), sd.getData().getDouble("spawn.y"), sd.getData().getDouble("spawn.z"), (float) sd.getData().getDouble("spawn.yaw"), (float) sd.getData().getDouble("spawn.pitch"));
     }
+    public static void setSprawdzanie(Location loc){
+        sd.getData().set("sprawdzanie.world", loc.getWorld().getName());
+        sd.getData().set("sprawdzanie.x", loc.getX());
+        sd.getData().set("sprawdzanie.y", loc.getY());
+        sd.getData().set("sprawdzanie.z", loc.getZ());
+        sd.getData().set("sprawdzanie.yaw", loc.getYaw());
+        sd.getData().set("sprawdzanie.pitch", loc.getPitch());
+        sd.saveData();
+    }
+    public static Location getSprawdzanie(){
+        World world = Bukkit.getWorld(sd.getData().getString("sprawdzanie.world"));
+        return new Location(world, sd.getData().getDouble("sprawdzanie.x"), sd.getData().getDouble("sprawdzanie.y"), sd.getData().getDouble("sprawdzanie.z"), (float) sd.getData().getDouble("sprawdzanie.yaw"), (float) sd.getData().getDouble("sprawdzanie.pitch"));
+    }
     public static void randomTeleport(Player p){
         int max = 5000;
         int randomx = (int) (Math.random()*10000-max);

@@ -6,7 +6,9 @@ import fb.core.api.RanksAPI;
 import fb.survival.Main;
 import fb.survival.api.PlayerAPI;
 import fb.survival.cmds.Spawn;
+import fb.survival.cmds.Sprawdzanie;
 import fb.survival.cmds.Vanish;
+import fb.survival.gui.gui.HomeGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,8 +40,11 @@ public class PlayerJoin implements Listener {
                 }
             }
         }
+        Sprawdzanie.playerisCheck.put(p, false);
         Spawn.teleport.put(p, 5);
         Spawn.teleportstatus.put(p, false);
+        HomeGUI.isteleport.put(p, false);
+        HomeGUI.teleporttime.put(p, 5);
         EntityDamageByEntity.antylogoutstatus.put(p, false);
         EntityDamageByEntity.antylogouttime.put(p, 30);
         p.sendTitle(HexAPI.hex("#0096fc§lFPCode"), HexAPI.hex("§fWitaj na trybie #0096fcSurvival"));

@@ -103,7 +103,6 @@ public class PlayerInventory implements Listener {
                     break;
             }
         }
-        // ... (pozostałe sekcje Kit Gracz, Kit VIP, itd. bez zmian) ...
         else if(ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase("Kit Gracz") && clickedInventory != null && clickedInventory.equals(e.getInventory())){
             e.setCancelled(true);
             int clickedSlot = e.getSlot();
@@ -297,6 +296,9 @@ public class PlayerInventory implements Listener {
                 case 10:
                     Craft_NetherPass.OpenGUI(p);
                     break;
+                case 11:
+                    Craft_NetherStar.OpenGUI(p);
+                    break;
                 default:
                     // CraftingiGUI.OpenGUI(p); // Usuwamy
                     break;
@@ -315,6 +317,119 @@ public class PlayerInventory implements Listener {
 
                         p.sendTitle(HexAPI.hex("#0096fc§lCRAFTING"), HexAPI.hex("§fStworzyles przedmiot #0096fcPrzepusta Netheru"));
                         p.closeInventory();
+                    }
+                    break;
+                case 41:
+                    Craft_NetherStar.OpenGUI(p);
+                    break;
+                default:
+                    // Craft_NetherPass.OpenGUI(p); // Usuwamy
+                    break;
+            }
+        }else if(ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase("Crafting Gwiazdy Netheru") && clickedInventory != null && clickedInventory.equals(e.getInventory())){
+            e.setCancelled(true);
+            int clickedSlot = e.getSlot();
+            switch (clickedSlot){
+                case 39:
+                    Craft_NetherPass.OpenGUI(p);
+                    break;
+                case 40:
+                    if(p.getInventory().containsAtLeast(Zwoj.getItem(), 8) && p.getInventory().containsAtLeast(new ItemStack(Material.DIAMOND_BLOCK), 1)){
+                        p.getInventory().removeItem(new ItemStack(Material.DIAMOND_BLOCK, 1));
+                        for(int i =0;i<8; i++) {
+                            p.getInventory().removeItem(Zwoj.getItem());
+                        }
+                        p.getInventory().addItem(new ItemStack(Material.NETHER_STAR));
+
+                        p.sendTitle(HexAPI.hex("#0096fc§lCRAFTING"), HexAPI.hex("§fStworzyles przedmiot #0096fcGwiazda Netheru"));
+                        p.closeInventory();
+                    }
+                    break;
+                default:
+                    // Craft_NetherPass.OpenGUI(p); // Usuwamy
+                    break;
+            }
+        }else if(ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase("Misje") && clickedInventory != null && clickedInventory.equals(e.getInventory())){
+            e.setCancelled(true);
+            int clickedSlot = e.getSlot();
+            switch (clickedSlot){
+
+                default:
+                    // Craft_NetherPass.OpenGUI(p); // Usuwamy
+                    break;
+            }
+        }else if(ChatColor.stripColor(e.getView().getTitle()).equalsIgnoreCase("Domy") && clickedInventory != null && clickedInventory.equals(e.getInventory())){
+            e.setCancelled(true);
+            int home = 0;
+            int clickedSlot = e.getSlot();
+            switch (clickedSlot){
+                case 11:
+                    home = 1;
+                    if(ranksAPI.hasPermission(p, "fb.home." + home)){
+                        if(PlayerAPI.hasHome(p, home)){
+                            if(e.isShiftClick()){
+                                e.setCancelled(true);
+                                HomeGUI.OpenGUI(p);
+                                p.closeInventory();
+                                PlayerAPI.removeHome(p, home);
+                                p.sendTitle(HexAPI.hex("#0096fc§lDOMY"), HexAPI.hex("§fUsunoles lokalizacje domu#0096fc #" + home));
+                            }else{
+                                p.closeInventory();
+                                HomeGUI.teleporttime.put(p, 5);
+                                HomeGUI.isteleport.put(p, true);
+                                HomeGUI.teleporthome.put(p, home);
+                            }
+                        }else{
+                            p.closeInventory();
+                            PlayerAPI.setHome(p, home, p.getLocation());
+                            p.sendTitle(HexAPI.hex("#0096fc§lDOMY"), HexAPI.hex("§fUstawiles lokalizacje domu#0096fc #" + home));
+                        }
+                    }
+                    break;
+                case 13:
+                    home = 2;
+                    if(ranksAPI.hasPermission(p, "fb.home." + home)){
+                        if(PlayerAPI.hasHome(p, home)){
+                            if(e.isShiftClick()){
+                                e.setCancelled(true);
+                                HomeGUI.OpenGUI(p);
+                                p.closeInventory();
+                                PlayerAPI.removeHome(p, home);
+                                p.sendTitle(HexAPI.hex("#0096fc§lDOMY"), HexAPI.hex("§fUsunoles lokalizacje domu#0096fc #" + home));
+                            }else{
+                                p.closeInventory();
+                                HomeGUI.teleporttime.put(p, 5);
+                                HomeGUI.isteleport.put(p, true);
+                                HomeGUI.teleporthome.put(p, home);
+                            }
+                        }else{
+                            p.closeInventory();
+                            PlayerAPI.setHome(p, home, p.getLocation());
+                            p.sendTitle(HexAPI.hex("#0096fc§lDOMY"), HexAPI.hex("§fUstawiles lokalizacje domu#0096fc #" + home));
+                        }
+                    }
+                    break;
+                case 15:
+                    home = 3;
+                    if(ranksAPI.hasPermission(p, "fb.home." + home)){
+                        if(PlayerAPI.hasHome(p, home)){
+                            if(e.isShiftClick()){
+                                e.setCancelled(true);
+                                HomeGUI.OpenGUI(p);
+                                p.closeInventory();
+                                PlayerAPI.removeHome(p, home);
+                                p.sendTitle(HexAPI.hex("#0096fc§lDOMY"), HexAPI.hex("§fUsunoles lokalizacje domu#0096fc #" + home));
+                            }else{
+                                p.closeInventory();
+                                HomeGUI.teleporttime.put(p, 5);
+                                HomeGUI.isteleport.put(p, true);
+                                HomeGUI.teleporthome.put(p, home);
+                            }
+                        }else{
+                            p.closeInventory();
+                            PlayerAPI.setHome(p, home, p.getLocation());
+                            p.sendTitle(HexAPI.hex("#0096fc§lDOMY"), HexAPI.hex("§fUstawiles lokalizacje domu#0096fc #" + home));
+                        }
                     }
                     break;
                 default:

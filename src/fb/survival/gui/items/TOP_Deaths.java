@@ -25,7 +25,11 @@ public class TOP_Deaths {
         lore.add(HexAPI.hex("§8§m--------§r#0096fc§lTOPKI§8§m--------"));
         lore.add("");
         for(int i = 1; i<=5; i++){
-            lore.add(HexAPI.hex("§7" + i + ". §f" + BanAPI.getTopDeathsName(i) + "§8: #0096fc" + BanAPI.getTopKilsAmount(i)));
+            if(!BanAPI.getTopDeathsName(i).equals("-")) {
+                lore.add(HexAPI.hex("§7" + i + ". §f" + BanAPI.getTopDeathsName(i) + "§8: #0096fc" + BanAPI.getTopDeathsAmount(i)));
+            }else{
+                lore.add(HexAPI.hex("§7" + i + ". §f"));
+            }
         }
 
         meta.setLore(lore);

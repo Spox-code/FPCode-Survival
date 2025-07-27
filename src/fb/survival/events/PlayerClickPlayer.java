@@ -4,6 +4,7 @@ import fb.core.api.BanAPI;
 import fb.core.api.HexAPI;
 import fb.core.api.RanksAPI;
 import fb.survival.api.MarketManager;
+import fb.survival.gui.gui.MisjeGUI;
 import fb.survival.gui.gui.PerkiGUI;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -43,6 +44,9 @@ public class PlayerClickPlayer implements Listener {
             }else if(e.getRightClicked().getType() == EntityType.VINDICATOR){
                 e.setCancelled(true);
                 MarketManager.openMarketGUI(p, 0);
+            }else if(e.getRightClicked().getType() == EntityType.ILLUSIONER){
+                e.setCancelled(true);
+                MisjeGUI.OpenGUI(p);
             }
         }
     }
