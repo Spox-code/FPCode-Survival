@@ -28,6 +28,11 @@ public class PlayerJoin implements Listener {
     @EventHandler
     public void PlayerJoin(PlayerJoinEvent e){
         Player p = e.getPlayer();
+        p.setResourcePack(
+                "https://www.dropbox.com/scl/fi/vs37fg0s7539m8fjx1jun/MCModels2-for-1.21.4.zip?rlkey=hjvo6m1gocnk84kblpx71m2pr&st=omgkb59s&dl=1",
+                null,
+                true
+        );
         if(!p.hasPlayedBefore()){
             PlayerAPI.setup(p);
             BanAPI.setupPlayerSurvival(p.getName());

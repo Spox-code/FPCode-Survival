@@ -28,11 +28,15 @@ public class Boss implements CommandExecutor, TabExecutor {
         if(sender instanceof Player p){
             if(ra.hasPermission(p, "fb.boss")){
                 if(args.length == 1){
-                    if(args[0].equalsIgnoreCase("zombie")){
-                        BossAPI.SpawnBossZombie(p.getLocation());
-                        p.sendTitle(HexAPI.hex("#0096fc§lBOSS"), HexAPI.hex("§fPojawiles Bossa #0096FCZombie"));
+                    if(ServerAPI.isBoss()) {
+                        if (args[0].equalsIgnoreCase("zombie")) {
+                            BossAPI.SpawnBossZombie(p.getLocation());
+                            p.sendTitle(HexAPI.hex("#0096fc§lBOSS"), HexAPI.hex("§fPojawiles Bossa #0096FCZombie"));
+                        } else {
+                            p.sendMessage("§cUzycie /boss <nazwa>");
+                        }
                     }else{
-                        p.sendMessage("§cUzycie /boss <nazwa>");
+                        p.sendMessage(HexAPI.hex("§8[#0096FC⚡§8] §fAktualnie bossy sa #0096fcwylaczone"));
                     }
                 }else{
                     p.sendMessage("§cUzycie /boss <nazwa>");

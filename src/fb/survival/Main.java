@@ -7,13 +7,13 @@ import fb.survival.cmds.*;
 import fb.survival.data.PlayerData; // Nadal zakłada, że PlayerData jest potrzebne
 import fb.survival.data.ServerData; // Nadal zakłada, że ServerData jest potrzebne do innych rzeczy
 import fb.survival.events.*;
+import fb.survival.gui.gui.AdminItemsGUI;
 import fb.survival.gui.items.HomeItem;
 import fb.survival.items.NetherPrzepustka;
 import fb.survival.items.Zwoj;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
@@ -126,6 +126,7 @@ public class Main extends JavaPlugin {
         getCommand("misje").setExecutor(new MisjeCMD());
         getCommand("home").setExecutor(new HomeCommand());
         getCommand("boss").setExecutor(new Boss(ranksApi));
+        getCommand("hat").setExecutor(new HatCommand());
 
         // Rejestracja eventów
         getServer().getPluginManager().registerEvents(new PlayerInventory(ranksApi), this);
@@ -157,7 +158,6 @@ public class Main extends JavaPlugin {
             Kowal
             Eventy
             Skrzynki
-            Bossy (Dodanie paru bosow dodanie opcje bossy do /settings i dodac automatyczne ich respienie co 6h)
             Custom Enchanty
             /discord
             Auto MSG
@@ -165,7 +165,8 @@ public class Main extends JavaPlugin {
             Nadanie uprawien
             /Rangi
             /Pomoc
-         */
+            Perki zrobic
+        */
 
         // Zarejestruj rozszerzenie PlaceholderAPI
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {

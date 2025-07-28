@@ -5,11 +5,10 @@ import fb.core.api.HexAPI;
 import fb.core.api.RanksAPI;
 import fb.core.api.TabListAPI;
 import fb.survival.Main;
+import fb.survival.api.BossAPI;
 import fb.survival.api.DropManager;
-import fb.survival.items.BankNote;
-import fb.survival.items.EmblematZycia;
-import fb.survival.items.TotemUlaskawienia;
-import fb.survival.items.Zwoj;
+import fb.survival.api.ServerAPI;
+import fb.survival.items.*;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -111,6 +110,16 @@ public class ClickEvent implements Listener {
 
             if(mainitem.hasItemMeta() && mainitem.getItemMeta().hasCustomModelData() && mainitem.getItemMeta().getCustomModelData() == TotemUlaskawienia.iditem){
                 e.setCancelled(true);
+            }
+            if(mainitem.hasItemMeta() && mainitem.getItemMeta().hasCustomModelData() && mainitem.getItemMeta().getCustomModelData() == BossZombieEGG.CUSTOM_MODEL_DATA){
+                e.setCancelled(true);
+                if(ServerAPI.isBoss()) {
+                    mainitem.setAmount(mainitem.getAmount() - 1);
+                    BossAPI.SpawnBossZombie(e.getClickedBlock().getLocation());
+                    p.sendMessage(HexAPI.hex("§8[#0096FC⚡§8] §fPojawiles bossa #0096fcZombie Boss"));
+                }else{
+                    p.sendTitle(HexAPI.hex("#0096fc§lBOSSY"), HexAPI.hex("§fAktualnie bossy za #0096fcwylaczone"));
+                }
             }
             if(p.getLocation().getWorld().getName().equalsIgnoreCase("spawn")){
                 if(!ra.hasPermission(p, "fb.spawn")) {

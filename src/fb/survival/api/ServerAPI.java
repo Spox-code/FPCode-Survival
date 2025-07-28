@@ -16,6 +16,9 @@ public class ServerAPI {
     public static boolean isNether(){
         return sd.getData().getBoolean("options.nether");
     }
+    public static boolean isBoss(){
+        return sd.getData().getBoolean("options.boss");
+    }
     public static boolean isKits(){
         return sd.getData().getBoolean("options.kits");
     }
@@ -25,6 +28,10 @@ public class ServerAPI {
     }
     public static void setKits(boolean status){
         sd.getData().set("options.kits", status);
+        sd.saveData();
+    }
+    public static void setBoss(boolean status){
+        sd.getData().set("options.boss", status);
         sd.saveData();
     }
     public static void setSpawn(Location loc){

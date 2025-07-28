@@ -64,6 +64,7 @@ public class ServerData {
         if(data.getString("options.nether") == null){
             data.set("options.nether", false);
             data.set("options.kits", false);
+            data.set("options.boss", false);
             saveData();
             System.out.println("Zapisano");
         }

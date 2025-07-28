@@ -1,7 +1,6 @@
 package fb.survival.events;
 
 import fb.core.api.BanAPI;
-import fb.core.api.BungeeAPI;
 import fb.core.api.HexAPI;
 import fb.core.api.RanksAPI;
 import fb.survival.api.PlayerAPI;
@@ -16,9 +15,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 
 public class PlayerInventory implements Listener {
 
@@ -68,6 +64,9 @@ public class PlayerInventory implements Listener {
                     break;
                 case 14:
                     p.getInventory().addItem(Ekskalibur.getitem());
+                    break;
+                case 15:
+                    p.getInventory().addItem(BossZombieEGG.getItem());
                     break;
                 default:
                     // Jeśli kliknięto na szare tło lub inny niezdefiniowany slot w "Przedmioty" GUI

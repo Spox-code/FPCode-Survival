@@ -77,6 +77,28 @@ public class Settings implements CommandExecutor, TabExecutor {
                         }else{
                             p.sendMessage("§cUzycie /settings <start/off> <usluga>");
                         }
+                    }else if(setting.equalsIgnoreCase("boss")){
+                        if(status.equalsIgnoreCase("start")){
+                            ServerAPI.setBoss(true);
+                            p.sendMessage(HexAPI.hex("§8[#0096FC⚡§8] §fWlaczyles #0096fcBossy"));
+                            for(Player ps : Bukkit.getOnlinePlayers()){
+                                ps.sendMessage("");
+                                ps.sendMessage(HexAPI.hex("   #0096fcFPCode §8-#0096fc Ogloszenie"));
+                                ps.sendMessage(HexAPI.hex("   §8» §fWlasnie zostaly wlaczone #0096fcBossy"));
+                                ps.sendMessage("");
+                            }
+                        }else if(status.equalsIgnoreCase("off")){
+                            ServerAPI.setBoss(false);
+                            p.sendMessage(HexAPI.hex("§8[#0096FC⚡§8] §fWylaczyles #0096fcBossy"));
+                            for(Player ps : Bukkit.getOnlinePlayers()){
+                                ps.sendMessage("");
+                                ps.sendMessage(HexAPI.hex("   #0096fcFPCode §8-#0096fc Ogloszenie"));
+                                ps.sendMessage(HexAPI.hex("   §8» §fWlasnie zostaly wylaczone #0096fcBossy"));
+                                ps.sendMessage("");
+                            }
+                        }else{
+                            p.sendMessage("§cUzycie /settings <start/off> <usluga>");
+                        }
                     }else{
                         p.sendMessage("§cUzycie /settings <start/off> <usluga>");
                     }
@@ -103,6 +125,7 @@ public class Settings implements CommandExecutor, TabExecutor {
                 }else if(args.length == 2){
                     tab.add("nether");
                     tab.add("kity");
+                    tab.add("boss");
                 }
             }
         }

@@ -11,6 +11,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class AdminItemsGUI {
 
+
+
     public static void OpenGUI(Player p){
         Inventory i = Bukkit.createInventory(null, 45, "§8§lPrzedmioty");
 
@@ -33,6 +35,7 @@ public class AdminItemsGUI {
         i.setItem(12, NetherPrzepustka.getNetherPass());
         i.setItem(13, Zwoj.getItem());
         i.setItem(14, Ekskalibur.getitem());
+        i.setItem(15, BossZombieEGG.getItem());
 
         p.openInventory(i);
     }

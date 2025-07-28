@@ -250,6 +250,21 @@ public class Systems {
         }.runTaskTimer(plugin, 0L, 20*120L); // Działa co sekundę, żeby sprawdzać tickCounter co tick, a nie co 2 minuty!
 
 
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if(ServerAPI.isBoss()){
+                    int max = 5000;
+                    int randomx = (int) (Math.random()*10000-max);
+                    int randomz = (int) (Math.random()*10000-max);
+                    World world = Bukkit.getWorld("world");
+                    int maxy = world.getHighestBlockYAt(randomx, randomz);
+                    Location randomloc = new Location(world, randomx, maxy, randomz);
+                    BossAPI.SpawnBossZombie(randomloc);
+                }
+            }
+        }.runTaskTimer(plugin, 0L, 20*60*60*6L);
+
         // ZADANIE: Zrzut (co minutę, ale z logiką tylko raz dziennie)
         new BukkitRunnable(){
             @Override
